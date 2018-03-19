@@ -21,43 +21,29 @@ global x0
 
 syms xa xb
 
-% Parameters of the model for generating data "True system"
-
-qa=1;
-qb=1;
-ka=1;
-kb=1;
-S=0.5;
-n=4;
-
-pa=1.2; % High autoactivation of xa
-pb=1.2; % High expression of xb
-
-% pa=0.6; % Low autoactivation of xa
-% pb=0.6; % Low autoactivation of xb
-
-eq_a=(pa.*xa.^n)./(S^n+xa.^n)+(qa*S^n)./(S^n+xb.^n)-ka.*xa==0;
-eq_b=(pb.*xb.^n)./(S^n+xb.^n)+(qb*S^n)./(S^n+xa.^n)-kb.*xb==0;
+Xss = myfun(0,[xa;xb]); % Steady state
+eq_a = Xss(1) == 0;
+eq_b = Xss(2) == 0;    
 
 [xae,xbe]=solve(eq_a,eq_b,xa,xb);
 
 xae=double(xae);
 xbe=double(xbe);
 
-
 %% Computing the vector field for the "True system"
 
+% Initial conditions equally distributed 
 xa=linspace(0,3,20);
 xb=linspace(0,3,20);
 
 [xa1,xb1]=meshgrid(xa,xb);
 
+% Pre-location
 u=zeros(size(xa1));
 v=zeros(size(xb1));
 
-t=0;
 for i = 1:numel(xa1)
-    Xprime = myfun(t,[xa1(i);xb1(i)]);
+    Xprime = myfun(0,[xa1(i);xb1(i)]); % Solve at time zero 
     u(i) = Xprime(1);
     v(i) = Xprime(2);    
 end
@@ -100,12 +86,13 @@ xb=x(:,2)./max(xb);
 
 xobs=[xa xb];
 
+% Initial conditions for the fitting --> normalized values
 x0=[xobs(1,1) xobs(1,2)];
 
 
 %% Optimization set-up particle swarm
 
-fun=@solutions; % "model data base" script
+fun=@solutions; % "model data base" 
 
 % Parameter search space
 ub=[1,1,1,1,1,1,1,1,1,1,1,1];
@@ -125,12 +112,9 @@ subplot(1,2,2), plot(t,xobs(:,2),'r',t,xpre(:,2),'k'),title('x_B');legend('Obser
 
 syms x1 x2
 
-xI = 0; % Input to the system
-
-eq_1=-x1./param(7)+param(9).*(param(1)+(1-param(1))./(1+exp((-4*param(2)/param(3))*(x1-param(3))/(1-param(1)))))...
-        +param(10).*(param(4)+(1-param(4))./(1+exp((-4*param(5)/param(6))*(x2-param(6))/(1-param(4)))))+xI==0;
-eq_2=-x2./param(8)+param(11).*(param(1)+(1-param(1))./(1+exp((-4*param(2)/param(3))*(x1-param(3))/(1-param(1)))))...
-        +param(12).*(param(4)+(1-param(4))./(1+exp((-4*param(5)/param(6))*(x2-param(6))/(1-param(4)))))+xI==0;
+Xss_s = sigmoidal_s(0,[x1;x2],param); % Steady state of the solution system 
+eq_1 = Xss_s(1) == 0;
+eq_2 = Xss_s(2) == 0;    
 
 [x1e,x2e]=solve(eq_1,eq_2,x1,x2);
 
@@ -159,6 +143,9 @@ quiver(x2_s,x1_s,v_s,u_s,'r');
 xlabel('x2')
 ylabel('x1')
 axis tight equal;
+
+hold on
+plot(x2e,x1e,'*k') % Fixed point 
 
 %% Plotting solutions on the vector field of the "decoded system"
 
