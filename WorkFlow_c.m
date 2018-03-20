@@ -10,14 +10,14 @@ tic
 %% Main
 
 % The following variables are used in the main script and in the "model
-% data base" script (solutions)
+% data base" (solutions)
 
 global xobs
 global t0 
 global xpre
 global x0 
 
-%% Fixed points of the true system --> xa'=0 and xb'=0 simultaneously
+%% Fixed points of the "true system" --> xa'=0 and xb'=0 simultaneously
 
 syms xa xb
 
@@ -30,7 +30,7 @@ eq_b = Xss(2) == 0;
 xae=double(xae);
 xbe=double(xbe);
 
-%% Computing the vector field for the "True system"
+%% Computing the vector field for the "true system"
 
 % Initial conditions equally distributed 
 xa=linspace(0,3,20);
@@ -49,10 +49,7 @@ for i = 1:numel(xa1)
 end
 
 figure(1)
-quiver(xb1,xa1,v,u,'r'); 
-xlabel('xb')
-ylabel('xa')
-axis tight equal;
+quiver(xb1,xa1,v,u,'r'),xlabel('xb'),ylabel('xa'),title('Vector field of the true system'),axis tight equal;
 
 %% Plotting solutions on the vector field of the "true system"
 
@@ -64,12 +61,11 @@ for xa0 = [0.5 0.5 0 3.0]
     end
 end
     
-
 %% Generate data over time
 
 % Initial conditions
 
-t0=[0:0.1:20];
+t0=[0:0.1:10];
 xa0=2.5;
 xb0=0.5;
 xi=[xa0 xb0];
@@ -88,7 +84,6 @@ xobs=[xa xb];
 
 % Initial conditions for the fitting --> normalized values
 x0=[xobs(1,1) xobs(1,2)];
-
 
 %% Optimization set-up particle swarm
 
@@ -123,11 +118,13 @@ x2e=double(x2e);
 
 %% Computing the vector field for the "decoded system"
 
+% Initial conditions equally distributed 
 x1=linspace(0,3,20);
 x2=linspace(0,3,20);
 
 [x1_s,x2_s]=meshgrid(x1,x2);
 
+% Pre-location
 u_s=zeros(size(x1_s));
 v_s=zeros(size(x2_s));
 
@@ -139,10 +136,7 @@ for i = 1:numel(x1_s)
 end
 
 figure(3)
-quiver(x2_s,x1_s,v_s,u_s,'r'); 
-xlabel('x2')
-ylabel('x1')
-axis tight equal;
+quiver(x2_s,x1_s,v_s,u_s,'r'),xlabel('x2'),ylabel('x1'),title('Vector field of the decoded system'),axis tight equal;
 
 hold on
 plot(x2e,x1e,'*k') % Fixed point 
@@ -161,11 +155,11 @@ toc
 %% ODEs for generating data
 
 % Model for generating data
-% Following: Stefan Semrau and Alexander van Oudenaarden, Annu. Rev. Cell Dev. Biol. 2015. 31:317-345
+% Following: Wang et al. 2010. Biophysical Journal Volume 99 July 2010 29?39. https://doi.org/10.1016/j.bpj.2010.03.058
 
 function dx = myfun(t,x)
 
-% Parameters of the model for generating data "True system"
+% Parameters of the model for generating data
 
 qa=1;
 qb=1;
@@ -193,7 +187,7 @@ end
 %% Model for decoding data 
 
 % Model of solutions: S-Systems
-% Following: Daniels, B. C., & Nemenman, I. (2015). Automated adaptive inference of phenomenological dynamical models. Nature Communications, 6, 1?8. https://doi.org/10.1038/ncomms9133
+% Following: Daniels, B. C., & Nemenman, I. (2015). Nature Communications, 6, 1?8. https://doi.org/10.1038/ncomms9133
 
 function r=solutions(param)
 
