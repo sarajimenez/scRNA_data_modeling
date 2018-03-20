@@ -136,10 +136,10 @@ for i = 1:numel(x1_s)
 end
 
 figure(3)
-quiver(x2_s,x1_s,v_s,u_s,'r'),xlabel('x2'),ylabel('x1'),title('Vector field of the decoded system')axis tight equal;
+quiver(x2_s,x1_s,v_s,u_s,'r'),xlabel('x2'),ylabel('x1'),title('Vector field of the decoded system'),axis tight equal;
 
 hold on
-plot(x2e,x1e,'*k') % Fixed point 
+plot(x2e,x1e,'.k','MarkerSize',20) % Fixed point 
 
 %% Plotting solutions on the vector field of the "decoded system"
 
@@ -159,7 +159,7 @@ toc
 
 function dx = myfun(t,x)
 
-% Parameters of the model for generating data "True system"
+% Parameters of the model for generating data
 
 qa=1;
 qb=1;
