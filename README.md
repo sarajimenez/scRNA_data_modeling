@@ -23,3 +23,7 @@ List of the different versions
     Fixed points (Solutions system)
     Vector field (Solutions system)
     Solutions in the vector field (Solutions system)
+    
+- Worflow_d.m
+    * particleswarm: 
+    Eigenvalues constraint
