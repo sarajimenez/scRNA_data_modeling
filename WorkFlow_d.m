@@ -93,7 +93,7 @@ fun=@solutions; % "model data base"
 ub=[1,1,1,1,1,1,1,1,1,1,1,1];
 lb=[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1];
 
-options=optimoptions('particleswarm','SwarmSize',100,'HybridFcn',@fmincon,nonlinfcn,'Display','iter');
+options=optimoptions('particleswarm','SwarmSize',100,'HybridFcn',@fmincon,'Display','iter');
 
 rng default  % For reproducibility
 nvars = 12; % Number of parameters to estimate 
@@ -189,7 +189,7 @@ end
 % Model of solutions: S-Systems
 % Following: Daniels, B. C., & Nemenman, I. (2015). Nature Communications, 6, 1?8. https://doi.org/10.1038/ncomms9133
 
-function r=solutions(param)
+function cf=solutions(param)
 
 global xobs
 global t0 
@@ -222,25 +222,11 @@ function dx = sigmoidal(t,x) % 12 parameters
     
 end
 
-function nlc = nonlicon(t,x) % Nonlinear inequality constraint
-    
-    syms x_1 x_2
-       
-    Xj=sigmoidal(0,[x_1;x_2]);
-    
-    J=jacobian([Xj(1);Xj(2)],[x_1 x_2]);
-    
-    x_1=2.5;
-    x_2=0.5;
-    
-    J_e=subs(J);
-    
-    nlc=eig(Je);
-    
-end
-
-% Cost function ||xobs-xpre||
+% residuals ||xobs-xpre||
 r=sqrt(sum((xpre(:,1)-xobs(:,1)).^2))+sqrt(sum((xpre(:,2)-xobs(:,2)).^2));
+
+% Cost function
+cf=r;
 
 end
 
