@@ -65,7 +65,7 @@ end
 
 % Initial conditions
 
-t0=[0:0.1:10];
+t0=[0:0.1:5];
 xa0=2.5;
 xb0=0.5;
 xi=[xa0 xb0];
@@ -152,102 +152,3 @@ for x10 = [0.5 0.5 0 3.0]
 end
 
 toc
-%% ODEs for generating data
-
-% Model for generating data
-% Following: Wang et al. 2010. Biophysical Journal Volume 99 July 2010 29?39. https://doi.org/10.1016/j.bpj.2010.03.058
-
-function dx = myfun(t,x)
-
-% Parameters of the model for generating data
-
-qa=1;
-qb=1;
-ka=1;
-kb=1;
-S=0.5;
-n=4;
-
-pa=1.2; % High autoactivation of xa
-pb=1.2; % High expression of xb
-
-% pa=0.6; % Low autoactivation of xa
-% pb=0.6; % Low autoactivation of xb
-
-xa=x(1);
-xb=x(2);
-
-dxa=(pa.*xa.^n)./(S^n+xa.^n)+(qa*S^n)./(S^n+xb.^n)-ka.*xa;
-dxb=(pb.*xb.^n)./(S^n+xb.^n)+(qb*S^n)./(S^n+xa.^n)-kb.*xb;
-
-dx=[dxa dxb]';
-
-end
-
-%% Model for decoding data 
-
-% Model of solutions: S-Systems
-% Following: Daniels, B. C., & Nemenman, I. (2015). Nature Communications, 6, 1?8. https://doi.org/10.1038/ncomms9133
-
-function cf=solutions(param)
-
-global xobs
-global t0 
-global xpre
-global x0 
-
-[t, x]=ode45(@sigmoidal,t0,x0); % The function change according to the model that we want to test
-
-xpre=x;
-
-function dx = sigmoidal(t,x) % 12 parameters 
-
-    x1=x(1);
-    x2=x(2);
-    
-    % Sigmoid x1: a1=param(1), b1=param(2), c1=param(3).
-    s1=param(1)+(1-param(1))./(1+exp((-4*param(2)/param(3))*(x1-param(3))/(1-param(1))));
-    % Sigmoid x2: a2=param(4), b2=param(5), c2=param(6).
-    s2=param(4)+(1-param(4))./(1+exp((-4*param(5)/param(6))*(x2-param(6))/(1-param(4))));
-    % Input
-    xI=0;
-    
-    % W11=param(9), W12=param(10)
-    dx1=-x1./param(7)+param(9).*s1+param(10).*s2+xI;
-    
-    % W21=param(11), W22=param(12)    
-    dx2=-x2./param(8)+param(11).*s1+param(12).*s2+xI;
-    
-    dx=[dx1 dx2]';
-    
-end
-
-% residuals ||xobs-xpre||
-r=sqrt(sum((xpre(:,1)-xobs(:,1)).^2))+sqrt(sum((xpre(:,2)-xobs(:,2)).^2));
-
-% Cost function
-cf=r;
-
-end
-
-function dx = sigmoidal_s(t,x,param) % 12 parameters 
-
-    x1=x(1);
-    x2=x(2);
-    
-    % Sigmoid x1: a1=param(1), b1=param(2), c1=param(3).
-    s1=param(1)+(1-param(1))./(1+exp((-4*param(2)/param(3))*(x1-param(3))/(1-param(1))));
-    % Sigmoid x2: a2=param(4), b2=param(5), c2=param(6).
-    s2=param(4)+(1-param(4))./(1+exp((-4*param(5)/param(6))*(x2-param(6))/(1-param(4))));
-    % Input
-    xI=0;
-    
-    % W11=param(9), W12=param(10)
-    dx1=-x1./param(7)+param(9).*s1+param(10).*s2+xI;
-    
-    % W21=param(11), W22=param(12)    
-    dx2=-x2./param(8)+param(11).*s1+param(12).*s2+xI;
-    
-    dx=[dx1 dx2]';
-    
-end

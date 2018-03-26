@@ -4,7 +4,7 @@
 % Developer: Sara Jimenez Correa (Living Systems Laboratory)
 % Advisor: Jesper Tegner
 
-clc; clear; close all; 
+clc; clear; close all; format rat
 
 tic
 %% Main
@@ -66,8 +66,8 @@ end
 % Initial conditions
 
 t0=[0:0.1:10];
-xa0=9;
-xb0=5;
+xa0=2.5;
+xb0=0.5;
 xi=[xa0 xb0];
 
 [t x]=ode45(@myfun,t0,xi);
@@ -189,7 +189,7 @@ end
 % Model of solutions: S-Systems
 % Following: Daniels, B. C., & Nemenman, I. (2015). Nature Communications, 6, 1?8. https://doi.org/10.1038/ncomms9133
 
-function r=solutions(param)
+function cf=solutions(param)
 
 global xobs
 global t0 
@@ -222,8 +222,27 @@ function dx = sigmoidal(t,x) % 12 parameters
     
 end
 
-% Cost function ||xobs-xpre||
+function ev = nlc(x)
+    
+    x_1=x(1);
+    x_2=x(2);
+    
+    Xj=sigmoidal(0,[x_1,x_2]);
+    J=jacobian([Xj(1);Xj(2)],[x_1,x_2])
+    J_e=subs([Xj(1);Xj(2)],[x_1,x_2])
+    ev=eig(J)
+    
+end
+
+ev=nlc(x)
+
+
+
+% residuals ||xobs-xpre||
 r=sqrt(sum((xpre(:,1)-xobs(:,1)).^2))+sqrt(sum((xpre(:,2)-xobs(:,2)).^2));
+
+% Cost function
+cf=r;
 
 end
 

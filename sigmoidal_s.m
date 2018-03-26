@@ -1,28 +1,3 @@
-
-close all; clc; clear all
-%%
-
-param=[1708/2557,-1,451/593,-1,335/849,769/789,1,1,385/804,-1,1,543/994];
-
-syms x1 x2
-
-Xprime = sigmoidal_s(0,[x1;x2],param);
-
-%Xprime=real(Xprime)
-
-J=jacobian([Xprime(1);Xprime(2)],[x1 x2]);
-    
-J_e=subs(J,{x1,x2},{0.4658,1.0032});
-    
-nlc=eig(J_e);
-    
-    if nlc<0
-        g=0;
-    else
-        g=1;
-    end
-
-
 function dx = sigmoidal_s(t,x,param) % 12 parameters 
 
     x1=x(1);

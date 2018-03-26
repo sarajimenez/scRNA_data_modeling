@@ -1,19 +1,41 @@
+%% Model for decoding data 
 
-close all; clc; clear all
-%%
+% Model of solutions: Sigmoidal 
+% Following: Daniels, B. C., & Nemenman, I. (2015). Nature Communications, 6, 1?8. https://doi.org/10.1038/ncomms9133
 
-param=[1708/2557,-1,451/593,-1,335/849,769/789,1,1,385/804,-1,1,543/994];
+function cf=solutions(param)
 
-syms x_1 x_2
+global xobs
+global t0 
+global xpre
+global x0 
 
-Xj=sigmoidal(0,[x_1,x_2],param);
+[t, x]=ode45(@sigmoidal,t0,x0); % The function change according to the model that we want to test
+
+xpre=x;
+
+% residuals ||xobs-xpre||
+r=sqrt(sum((xpre(:,1)-xobs(:,1)).^2))+sqrt(sum((xpre(:,2)-xobs(:,2)).^2));
+
+x_1 = sym('x_1');
+x_2 = sym('x_2');
+
+Xj=sigmoidal(0,[x_1,x_2]);
 J=jacobian([Xj(1);Xj(2)],[x_1,x_2]);
 J_e=subs(J,{x_1,x_2},{0.5,2.5});
 J_e=double(J_e);
 ev=eig(J_e);
 
+if ev<0
+    nlc=0;
+else
+    nlc=1;
+end
 
-function dx = sigmoidal(t,x,param) % 12 parameters 
+% Cost function
+cf=0.5*r+0.5*nlc;
+
+function dx = sigmoidal(t,x) % 12 parameters 
 
     x1=x(1);
     x2=x(2);
@@ -34,4 +56,5 @@ function dx = sigmoidal(t,x,param) % 12 parameters
     dx=[dx1 dx2]';
     
 end
-    
+
+end
