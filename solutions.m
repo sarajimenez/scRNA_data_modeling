@@ -17,23 +17,25 @@ xpre=x;
 % residuals ||xobs-xpre||
 r=sqrt(sum((xpre(:,1)-xobs(:,1)).^2))+sqrt(sum((xpre(:,2)-xobs(:,2)).^2));
 
-x_1 = sym('x_1');
-x_2 = sym('x_2');
+% x_1 = sym('x_1');
+% x_2 = sym('x_2');
+% 
+% Xj=sigmoidal(0,[x_1,x_2]);
+% J=jacobian([Xj(1);Xj(2)],[x_1,x_2]);
+% J_e=subs(J,{x_1,x_2},{0.5,2.5});
+% J_e=double(J_e);
+% ev=eig(J_e);
 
-Xj=sigmoidal(0,[x_1,x_2]);
-J=jacobian([Xj(1);Xj(2)],[x_1,x_2]);
-J_e=subs(J,{x_1,x_2},{0.5,2.5});
-J_e=double(J_e);
-ev=eig(J_e);
+ev = nlc(param);
 
 if ev<0
-    nlc=0;
+    F=0;
 else
-    nlc=1;
+    F=1;
 end
 
 % Cost function
-cf=0.5*r+0.5*nlc;
+cf=0.5*r+0.5*F;
 
 function dx = sigmoidal(t,x) % 12 parameters 
 

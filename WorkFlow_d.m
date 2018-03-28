@@ -146,7 +146,7 @@ plot(x2e,x1e,'.k','MarkerSize',20) % Fixed point
 hold on
 for x10 = [0.5 0.5 0 3.0]
     for x20 = [3.0 0 0.5 0]
-        [t, S] = ode45(@sigmoidal_s,[0,20],[x10,x20],[],param); 
+        [t, S] = ode45(@sigmoidal_s,[0,50],[x10,x20],[],param); 
         plot(S(:,2),S(:,1),'b')
     end
 end
