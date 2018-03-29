@@ -26,4 +26,5 @@ List of the different versions
     
 - Worflow_d.m
     * particleswarm: 
-    Eigenvalues constraint
+    Jacobian constraint
+    Different scripts for the workflow and the different functions
