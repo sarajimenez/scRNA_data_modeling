@@ -10,7 +10,7 @@ Xj=sigmoidal_s(0,[x_1,x_2],param);
 % Jacobian of the function wrt x_1 and x_2
 J=jacobian([Xj(1);Xj(2)],[x_1,x_2]);
 % Evaluate the jacobian in the "desired states"
-J_e=subs(J,{x_1,x_2},{0.5,0.5}); % Here we modify the states  
+J_e=subs(J,{x_1,x_2},{2.5,2.5}); % Here we modify the states  
 J_e=double(J_e);
 % Eigen values 
 ev=eig(J_e);

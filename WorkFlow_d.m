@@ -90,10 +90,11 @@ x0=[xobs(1,1) xobs(1,2)];
 fun=@solutions; % "model data base" 
 
 % Parameter search space
-ub=[1,1,1,1,1,1,1,1,1,1,1,1];
+ub=[0.9999,1,1,1,1,1,1,1,1,1,1,1];
 lb=[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1];
 
 options=optimoptions('particleswarm','SwarmSize',100,'HybridFcn',@fmincon,'Display','iter');
+%options=optimoptions('particleswarm','SwarmSize',100,'Display','iter');
 
 rng default  % For reproducibility
 nvars = 12; % Number of parameters to estimate 

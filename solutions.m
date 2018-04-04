@@ -14,13 +14,28 @@ global x0
 
 xpre=x;
 
-% residuals ||xobs-xpre||
+% residuals ||xobs-xpre|| (20% of importance)
 r=sqrt(sum((xpre(:,1)-xobs(:,1)).^2))+sqrt(sum((xpre(:,2)-xobs(:,2)).^2));
 
+% Non-linear constraint related with the stability of the fixed points (60%
+% of importance)
 [F1, F2, F3] = nlc(param);
 
+% Constraint related with the feasibility of the problem (20% of importance)
+if param(7) || param(8) || param(3) || param(6) == 0
+    F4=1;
+else
+    F4=0;
+end
+
+if param(1) || param(4) == 1
+    F5=1;
+else
+    F5=0;
+end
+
 % Cost function
-cf=0.25*r+0.25*F1+0.25*F2+0.25*F3;
+cf=0.2*r+0.2*F1+0.2*F2+0.2*F3+0.1*F4+0.1*F5;
 
 function dx = sigmoidal(t,x) % 12 parameters 
 
