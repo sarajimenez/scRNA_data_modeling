@@ -3,7 +3,7 @@
 % Model of solutions: Sigmoidal 
 % Following: Daniels, B. C., & Nemenman, I. (2015). Nature Communications, 6, 1?8. https://doi.org/10.1038/ncomms9133
 
-function cf=solutions(param)
+function cf=solutions_e(param)
 
 global xobs
 global t0 
@@ -19,7 +19,7 @@ r=sqrt(sum((xpre(:,1)-xobs(:,1)).^2))+sqrt(sum((xpre(:,2)-xobs(:,2)).^2));
 
 % Non-linear constraint related with the stability of the fixed points (60%
 % of importance)
-[F1, F2, F3] = nlc(param);
+[F1, F2, F3] = nlc_e(param);
 
 % Constraint related with the feasibility of the problem (20% of importance)
 if param(7) || param(8) || param(3) || param(6) == 0
