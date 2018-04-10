@@ -94,7 +94,6 @@ ub=[0.9999,1,1,1,1,1,1,1,1,1,1,1];
 lb=[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1];
 
 options=optimoptions('particleswarm','SwarmSize',100,'HybridFcn',@fmincon,'Display','iter');
-%options=optimoptions('particleswarm','SwarmSize',100,'Display','iter');
 
 rng default  % For reproducibility
 nvars = 12; % Number of parameters to estimate 
@@ -145,8 +144,8 @@ plot(x2e,x1e,'.k','MarkerSize',20) % Fixed point
 %% Plotting solutions on the vector field of the "decoded system"
 
 hold on
-for x10 = [0.5 0.5 0 3.0]
-    for x20 = [3.0 0 0.5 0]
+for x10 = [0 3.0]
+    for x20 = [0 0.3 0.5 1.0 1.5 2.0 2.5 3.0]
         [t, S] = ode45(@sigmoidal_s,[0,100],[x10,x20],[],param); 
         plot(S(:,2),S(:,1),'b')
     end

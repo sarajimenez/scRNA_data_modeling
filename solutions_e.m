@@ -35,7 +35,7 @@ else
 end
 
 % Cost function
-cf=0.2*r+0.2*F1+0.2*F2+0.2*F3+0.1*F4+0.1*F5;
+cf=0.2*r+100*F1+100*F2+100*F3+1*F4+1*F5;
 
 function dx = sigmoidal(t,x) % 12 parameters 
 
