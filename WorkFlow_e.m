@@ -98,8 +98,8 @@ i=1;
 global s1 
 global s2
 
-for s1 = [0.5]
-    for s2 = [2.5]
+for s1 = [0.4286]
+    for s2 = [1.0000]
         
         % Optimization set-up particle swarm
 
@@ -172,6 +172,14 @@ end
 hold on
 for x10 = [0 3.0]
     for x20 = [0 0.3 0.5 1.0 1.5 2.0 2.5 3.0]
+        [t, S] = ode45(@sigmoidal_s,[0,100],[x10,x20],[],param); 
+        plot(S(:,2),S(:,1),'b')
+    end
+end
+
+hold on
+for x20 = [0 3.0]
+    for x10 = [0 0.3 0.5 1.0 1.5 2.0 2.5 3.0]
         [t, S] = ode45(@sigmoidal_s,[0,100],[x10,x20],[],param); 
         plot(S(:,2),S(:,1),'b')
     end
