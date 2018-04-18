@@ -89,17 +89,17 @@ x0=[xobs(1,1) xobs(1,2)];
 %% 
 
 % Pre-location
-solutions=zeros(4,12); 
-xe=zeros(4,2);
-states=zeros(4,2);
+solutions=zeros(1,12); 
+xe=zeros(1,2);
+states=zeros(1,2);
 
 i=1;
 
 global s1 
 global s2
 
-for s1 = [0.5 2.5]
-    for s2 = [0.5 2.5]
+for s1 = [0.5]
+    for s2 = [0.5]
         
         % Optimization set-up particle swarm
 
@@ -142,39 +142,47 @@ for s1 = [0.5 2.5]
     end
 end
 
-% %% Computing the vector field for the "decoded system"
-% 
-%         % Initial conditions equally distributed 
-%         x1=linspace(0,3,20);
-%         x2=linspace(0,3,20);
-% 
-%         [x1_s,x2_s]=meshgrid(x1,x2);
-% 
-%         % Pre-location
-%         u_s=zeros(size(x1_s));
-%         v_s=zeros(size(x2_s));
-% 
-%         t=0;
-%         for i = 1:numel(x1_s)
-%             Xprime_s = sigmoidal_s(t,[x1_s(i);x2_s(i)],param);
-%             u_s(i) = Xprime_s(1);
-%             v_s(i) = Xprime_s(2);    
-%         end
-% 
-%         figure(3)
-%         quiver(x2_s,x1_s,v_s,u_s,'r'),xlabel('x2'),ylabel('x1'),title('Vector field of the decoded system'),axis tight equal;
-% 
-%         hold on
-%         plot(x2e,x1e,'.k','MarkerSize',20) % Fixed point 
-% 
-% %% Plotting solutions on the vector field of the "decoded system"
-% 
-% hold on
-% for x10 = [0.5 0.5 0 3.0]
-%     for x20 = [3.0 0 0.5 0]
-%         [t, S] = ode45(@sigmoidal_s,[0,100],[x10,x20],[],param); 
-%         plot(S(:,2),S(:,1),'b')
-%     end
-% end
+%% Computing the vector field for the "decoded system"
+
+        % Initial conditions equally distributed 
+        x1=linspace(0,3,20);
+        x2=linspace(0,3,20);
+
+        [x1_s,x2_s]=meshgrid(x1,x2);
+
+        % Pre-location
+        u_s=zeros(size(x1_s));
+        v_s=zeros(size(x2_s));
+
+        t=0;
+        for i = 1:numel(x1_s)
+            Xprime_s = sigmoidal_s(t,[x1_s(i);x2_s(i)],param);
+            u_s(i) = Xprime_s(1);
+            v_s(i) = Xprime_s(2);    
+        end
+
+        figure(3)
+        quiver(x2_s,x1_s,v_s,u_s,'r'),xlabel('x2'),ylabel('x1'),title('Vector field of the decoded system'),axis tight equal;
+
+        hold on
+        plot(x2e,x1e,'.k','MarkerSize',20) % Fixed point 
+
+%% Plotting solutions on the vector field of the "decoded system"
+
+hold on
+for x10 = [0 3.0]
+    for x20 = [0 0.3 0.5 1.0 1.5 2.0 2.5 3.0]
+        [t, S] = ode45(@sigmoidal_s,[0,100],[x10,x20],[],param); 
+        plot(S(:,2),S(:,1),'b')
+    end
+end
+
+hold on
+for x20 = [0 3.0]
+    for x10 = [0 0.3 0.5 1.0 1.5 2.0 2.5 3.0]
+        [t, S] = ode45(@sigmoidal_s,[0,100],[x10,x20],[],param); 
+        plot(S(:,2),S(:,1),'b')
+    end
+end
 
 toc

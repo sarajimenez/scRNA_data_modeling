@@ -98,8 +98,8 @@ i=1;
 global s1 
 global s2
 
-for s1 = [0.4286]
-    for s2 = [1.0000]
+for s1 = [0.5]
+    for s2 = [0.5]
         
         % Optimization set-up particle swarm
 
