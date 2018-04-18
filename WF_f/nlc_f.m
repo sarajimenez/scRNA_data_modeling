@@ -1,6 +1,6 @@
 %% Non-linear constraint related with the jacobian 
 
-function [F1, F2, F3] = nlc_e(param)
+function [F1, F2, F3] = nlc_f(param)
 
 global s1 
 global s2
