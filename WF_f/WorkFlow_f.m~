@@ -66,7 +66,7 @@ global x0
 
 % Initial conditions
 
-t0=[0:0.1:5];
+% t0=[0:0.1:5];
 % xa0=2.5;
 % xb0=0.5;
 % xi=[xa0 xb0];
@@ -91,8 +91,8 @@ t0=[0:0.1:5];
 fun=@solutions_f; % "model data base" 
 
 % Parameter search space
-ub=[0.9,1,1,0.9,1,1,1,1,1,1,1,1];
-lb=[0,-1,0,0,-1,0,-1,-1,-1,-1,-1,-1];
+ub=[0.9999,1,1,1,1,1,1,1,1,1,1,1];
+lb=[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1];
 
 options=optimoptions('particleswarm','SwarmSize',100,'HybridFcn',@fmincon,'Display','iter');
 
@@ -105,8 +105,9 @@ nvars = 12; % Number of parameters to estimate
 % subplot(1,2,2), plot(t,xobs(:,2),'r',t,xpre(:,2),'k'),title('x_B');legend('Observed','Predicted'),xlabel('time'),ylabel('Expression'); hold on;
 
 figure(2)
-subplot(1,2,1), plot(t0,xpre(:,1),'k'),title('x_1'),legend('Predicted'),xlabel('time'),ylabel('Expression'); hold on;
-subplot(1,2,2), plot(t0,xpre(:,2),'k'),title('x_2');legend('Predicted'),xlabel('time'),ylabel('Expression'); hold on;
+subplot(1,2,1), plot(t,xpre(:,1),'k'),title('x_A'),legend('Observed','Predicted'),xlabel('time'),ylabel('Expression'); hold on;
+subplot(1,2,2), plot(t,xobs(:,2),'r',t,xpre(:,2),'k'),title('x_B');legend('Observed','Predicted'),xlabel('time'),ylabel('Expression'); hold on;
+
 
 % Fixed points of the solution system --> x1'=0 and x2'=0 simultaneously 
 

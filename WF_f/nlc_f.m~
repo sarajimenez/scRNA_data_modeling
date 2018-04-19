@@ -12,26 +12,27 @@ Xj=sigmoidal_s(0,[x_1,x_2],param);
 J=jacobian([Xj(1);Xj(2)],[x_1,x_2]);
 
 % Pre-location
-ev = zeros(2,2);
-D = zeros(2,1);
-T = zeros(2,1);
-SRT = zeros(2,1);
+ev = zeros(2,4);
+D = zeros(4,1);
+T = zeros(4,1);
+SRT = zeros(4,1);
 
-s = [0.5 1.5; 1.5 0.5];
+
+s = [0.5 2.5; 2.5 0.5];
 
 for j = 1:2
        
-    % Evaluate the jacobian in the "desired states"
-    J_e=subs(J,{x_1,x_2},{s(j,1),s(j,2)}); % Here we modify the states  
-    J_e=double(J_e);
-    % Eigen values 
-    ev(:,j)=eig(J_e);
-    % Determinant 
-    D(j)=ev(1,j).*ev(2,j);
-    % Trace
-    T(j)=ev(1,j)+ev(2,j);
-    % Term inside the square root
-    SRT(j)=T(j)^2-4*D(j);
+        % Evaluate the jacobian in the "desired states"
+        J_e=subs(J,{x_1,x_2},{s(j,1),s(j,2)}); % Here we modify the states  
+        J_e=double(J_e);
+        % Eigen values 
+        ev(:,j)=eig(J_e);
+        % Determinant 
+        D(j)=ev(1,j).*ev(2,j);
+        % Trace
+        T(j)=ev(1,j)+ev(2,j);
+        % Term inside the square root
+        SRT(j)=T(j)^2-4*D(j);
         
 end
 
