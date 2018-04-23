@@ -5,18 +5,18 @@
 
 function cf=solutions_f(param)
 
-% global xobs
+global xobs
 global t0 
 global xpre
-% global x0 
+global x0
 
-% [t, x]=ode45(@sigmoidal,t0,x0); % The function change according to the model that we want to test
-[t, x]=ode45(@sigmoidal,t0,[0 0]); % The function change according to the model that we want to test
+[t, x]=ode45(@sigmoidal,t0,x0); % The function change according to the model that we want to test
+% [t, x]=ode45(@sigmoidal,t0,[1.5 1.5]); % The function change according to the model that we want to test
 
 xpre=x;
 
-% residuals ||xobs-xpre|| (20% of importance)
-% r=sqrt(sum((xpre(:,1)-xobs(:,1)).^2))+sqrt(sum((xpre(:,2)-xobs(:,2)).^2));
+% Residuals ||xobs-xpre|| (20% of importance)
+r=sqrt(sum((xpre(:,1)-xobs(:,1)).^2))+sqrt(sum((xpre(:,2)-xobs(:,2)).^2));
 
 % Non-linear constraint related with the stability of the fixed points (60%
 % of importance)
@@ -36,8 +36,8 @@ else
 end
 
 % Cost function
-% cf = 0.2*r + 100*F1 + 100*F2 + 100*F3 + 1*F4 + 1*F5;
-cf = 100*F1 + 100*F2 + 100*F3 + 1*F4 + 1*F5;
+cf = 0.2*r + 100*F1 + 100*F2 + 100*F3 + 1*F4 + 1*F5;
+% cf = 100*F1 + 100*F2 + 100*F3 + 1*F4 + 1*F5;
 
 function dx = sigmoidal(t,x) % 12 parameters 
 
@@ -45,14 +45,9 @@ function dx = sigmoidal(t,x) % 12 parameters
     x2=x(2);
     
     % Sigmoid x1: a1=param(1), b1=param(2), c1=param(3).
-%     s1=param(1)+(1-param(1))./(1+exp((-4*param(2))*(x1-param(3))/(1-param(1))));
-%     % Sigmoid x2: a2=param(4), b2=param(5), c2=param(6).
-%     s2=param(4)+(1-param(4))./(1+exp((-4*param(5))*(x2-param(6))/(1-param(4))));
-%     
-    % Sigmoid x1: a1=param(1), b1=param(2), c1=param(3).
-    s1=param(1)./(1+exp((-param(2))*(x1-param(3))/(1-param(1))));
+    s1=param(1)+(1-param(1))./(1+exp((-4*param(2))*(x1-param(3))/(1-param(1))));
     % Sigmoid x2: a2=param(4), b2=param(5), c2=param(6).
-    s2=(1-param(4))./(1+exp((-4*param(5))*(x2-param(6))/(1-param(4))));
+    s2=param(4)+(1-param(4))./(1+exp((-4*param(5))*(x2-param(6))/(1-param(4))));
     
     % Input
     xI=0;

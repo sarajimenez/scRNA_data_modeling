@@ -20,79 +20,85 @@ global x0
 
 %% Fixed points of the "true system" --> xa'=0 and xb'=0 simultaneously
 
-% syms xa xb
-% 
-% Xss = myfun(0,[xa;xb]); % Steady state
-% eq_a = Xss(1) == 0;
-% eq_b = Xss(2) == 0;    
-% 
-% [xae,xbe]=solve(eq_a,eq_b,xa,xb);
-% 
-% xae=double(xae);
-% xbe=double(xbe);
+syms xa xb
+
+Xss = myfun(0,[xa;xb]); % Steady state
+eq_a = Xss(1) == 0;
+eq_b = Xss(2) == 0;    
+
+[xae,xbe]=solve(eq_a,eq_b,xa,xb);
+
+xae=double(xae);
+xbe=double(xbe);
 
 %% Computing the vector field for the "true system"
 
-% % Initial conditions equally distributed 
-% xa=linspace(0,3,20);
-% xb=linspace(0,3,20);
-% 
-% [xa1,xb1]=meshgrid(xa,xb);
-% 
-% % Pre-location
-% u=zeros(size(xa1));
-% v=zeros(size(xb1));
-% 
-% for i = 1:numel(xa1)
-%     Xprime = myfun(0,[xa1(i);xb1(i)]); % Solve at time zero 
-%     u(i) = Xprime(1);
-%     v(i) = Xprime(2);    
-% end
-% 
-% figure(1)
-% quiver(xb1,xa1,v,u,'r'),xlabel('xb'),ylabel('xa'),title('Vector field of the true system'),axis tight equal;
+% Initial conditions equally distributed 
+xa=linspace(0,3,20);
+xb=linspace(0,3,20);
+
+[xa1,xb1]=meshgrid(xa,xb);
+
+% Pre-location
+u=zeros(size(xa1));
+v=zeros(size(xb1));
+
+for i = 1:numel(xa1)
+    Xprime = myfun(0,[xa1(i);xb1(i)]); % Solve at time zero 
+    u(i) = Xprime(1);
+    v(i) = Xprime(2);    
+end
+
+figure(1)
+quiver(xb1,xa1,v,u,'r'),xlabel('xb'),ylabel('xa'),title('Vector field of the true system'),axis tight equal;
 
 %% Plotting solutions on the vector field of the "true system"
 
-% hold on
-% for xa0 = [0.5 0.5 0 3.0]
-%     for xb0 = [3.0 0 0.5 0]
-%         [t, S] = ode45(@myfun,[0,50],[xa0,xb0]); 
-%         plot(S(:,2),S(:,1),'b')
-%     end
-% end
+hold on
+for xa0 = [0 0.5 3.0]
+    for xb0 = [0 0.5 3.0]
+        [t, S] = ode45(@myfun,[0,50],[xa0,xb0]); 
+        plot(S(:,2),S(:,1),'b')
+    end
+end
     
 %% Generate data over time
 
 % Initial conditions
 
-% t0=[0:0.1:5];
-% xa0=2.5;
-% xb0=0.5;
-% xi=[xa0 xb0];
-% 
-% [t x]=ode45(@myfun,t0,xi);
-% 
-% % Normalization --> values between 0 and 1
-% 
-% xa=x(:,1);
-% xa=x(:,1)./max(xa);
-% 
-% xb=x(:,2);
-% xb=x(:,2)./max(xb);
-% 
-% xobs=[xa xb];
-% 
-% % Initial conditions for the fitting --> normalized values
-% x0=[xobs(1,1) xobs(1,2)];
+t0=[0:0.1:10];
+xa0=2.0;
+xb0=0.3;
+xi=[xa0 xb0];
+
+[t x]=ode45(@myfun,t0,xi);
+
+figure(2)
+subplot(1,2,1), plot(t,x(:,1),'r'),title('x_A'),legend('Observed'),xlabel('time'),ylabel('Expression'); hold on;
+subplot(1,2,2), plot(t,x(:,2),'r'),title('x_B');legend('Observed'),xlabel('time'),ylabel('Expression'); hold on;
+
+m = max(max(xa),max(xb))
+
+% Normalization --> values between 0 and 1
+
+xa=x(:,1);
+xa=x(:,1)./max(xa);
+
+xb=x(:,2);
+xb=x(:,2)./max(xb);
+
+xobs=[xa xb];
+
+% Initial conditions for the fitting --> normalized values
+x0=[xobs(1,1) xobs(1,2)];
 
 %% Optimization set-up particle swarm
 
 fun=@solutions_f; % "model data base" 
 
 % Parameter search space
-ub=[0.9999,1,1,1,1,1,1,1,1,1,1,1];
-lb=[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1];
+ub=[0.9,1,1,0.9,1,1,1,1,1,1,1,1];
+lb=[0,-1,0,0,-1,0,-1,-1,-1,-1,-1,-1];
 
 options=optimoptions('particleswarm','SwarmSize',100,'HybridFcn',@fmincon,'Display','iter');
 
@@ -100,16 +106,15 @@ rng default  % For reproducibility
 nvars = 12; % Number of parameters to estimate 
 [param] = particleswarm(fun,nvars,lb,ub,options);
         
-% figure(2)
-% subplot(1,2,1), plot(t,xobs(:,1),'r',t,xpre(:,1),'k'),title('x_A'),legend('Observed','Predicted'),xlabel('time'),ylabel('Expression'); hold on;
-% subplot(1,2,2), plot(t,xobs(:,2),'r',t,xpre(:,2),'k'),title('x_B');legend('Observed','Predicted'),xlabel('time'),ylabel('Expression'); hold on;
-
 figure(2)
-subplot(1,2,1), plot(t,xpre(:,1),'k'),title('x_A'),legend('Observed','Predicted'),xlabel('time'),ylabel('Expression'); hold on;
+subplot(1,2,1), plot(t,xobs(:,1),'r',t,xpre(:,1),'k'),title('x_A'),legend('Observed','Predicted'),xlabel('time'),ylabel('Expression'); hold on;
 subplot(1,2,2), plot(t,xobs(:,2),'r',t,xpre(:,2),'k'),title('x_B');legend('Observed','Predicted'),xlabel('time'),ylabel('Expression'); hold on;
 
+% figure(2)
+% subplot(1,2,1), plot(t0,xpre(:,1),'k'),title('x_1'),legend('Predicted'),xlabel('time'),ylabel('Expression'); hold on;
+% subplot(1,2,2), plot(t0,xpre(:,2),'k'),title('x_2');legend('Predicted'),xlabel('time'),ylabel('Expression'); hold on;
 
-% Fixed points of the solution system --> x1'=0 and x2'=0 simultaneously 
+%% Fixed points of the solution system --> x1'=0 and x2'=0 simultaneously 
 
 syms x1 x2
 
@@ -141,7 +146,7 @@ for i = 1:numel(x1_s)
     v_s(i) = Xprime_s(2);    
 end
 
-figure(3)
+figure(4)
 quiver(x2_s,x1_s,v_s,u_s,'r'),xlabel('x2'),ylabel('x1'),title('Vector field of the decoded system'),axis tight equal;
 
 hold on

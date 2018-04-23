@@ -13,10 +13,78 @@ tic
 
 % The following variables are used in the main script and in the "model data base" (solutions)
 
+global xobs
 global t0 
 global xpre
+global x0 
+
+%% Fixed points of the "true system" --> xa'=0 and xb'=0 simultaneously
+
+syms xa xb
+
+Xss = myfun(0,[xa;xb]); % Steady state
+eq_a = Xss(1) == 0;
+eq_b = Xss(2) == 0;    
+
+[xae,xbe]=solve(eq_a,eq_b,xa,xb);
+
+xae=double(xae);
+xbe=double(xbe);
+
+%% Computing the vector field for the "true system"
+
+% Initial conditions equally distributed 
+xa=linspace(0,3,20);
+xb=linspace(0,3,20);
+
+[xa1,xb1]=meshgrid(xa,xb);
+
+% Pre-location
+u=zeros(size(xa1));
+v=zeros(size(xb1));
+
+for i = 1:numel(xa1)
+    Xprime = myfun(0,[xa1(i);xb1(i)]); % Solve at time zero 
+    u(i) = Xprime(1);
+    v(i) = Xprime(2);    
+end
+
+figure(1)
+quiver(xb1,xa1,v,u,'r'),xlabel('xb'),ylabel('xa'),title('Vector field of the true system'),axis tight equal;
+
+%% Plotting solutions on the vector field of the "true system"
+
+hold on
+for xa0 = [0 0.5 3.0]
+    for xb0 = [0 0.5 3.0]
+        [t, S] = ode45(@myfun,[0,50],[xa0,xb0]); 
+        plot(S(:,2),S(:,1),'b')
+    end
+end
+    
+%% Generate data over time
+
+% Initial conditions
 
 t0=[0:0.1:10];
+xa0=0.1;
+xb0=3.0;
+xi=[xa0 xb0];
+
+[t x]=ode45(@myfun,t0,xi);
+
+% Normalization --> values between 0 and 1
+
+m = max(max(x(:,1)),max(x(:,2)));
+
+xa = x(:,1)./m;
+
+xb = x(:,2)./m;
+
+xobs=[xa xb];
+
+% Initial conditions for the fitting --> normalized values
+x0=[xobs(1,1) xobs(1,2)];
 
 %% Optimization set-up particle swarm
 
@@ -33,9 +101,12 @@ nvars = 12; % Number of parameters to estimate
 [param] = particleswarm(fun,nvars,lb,ub,options);
         
 figure(2)
-subplot(1,2,1), plot(t0,xpre(:,1),'k'),title('x_A'),legend('Predicted'),xlabel('time'),ylabel('Expression'); hold on;
-subplot(1,2,2), plot(t0,xpre(:,2),'k'),title('x_B');legend('Predicted'),xlabel('time'),ylabel('Expression'); hold on;
+subplot(1,2,1), plot(t,xobs(:,1),'r',t,xpre(:,1),'k'),title('x_A'),legend('Observed','Predicted'),xlabel('time'),ylabel('Expression'); hold on;
+subplot(1,2,2), plot(t,xobs(:,2),'r',t,xpre(:,2),'k'),title('x_B');legend('Observed','Predicted'),xlabel('time'),ylabel('Expression'); hold on;
 
+% figure(2)
+% subplot(1,2,1), plot(t0,xpre(:,1),'k'),title('x_1'),legend('Predicted'),xlabel('time'),ylabel('Expression'); hold on;
+% subplot(1,2,2), plot(t0,xpre(:,2),'k'),title('x_2');legend('Predicted'),xlabel('time'),ylabel('Expression'); hold on;
 
 %% Fixed points of the solution system --> x1'=0 and x2'=0 simultaneously 
 
