@@ -6,10 +6,10 @@ x_1 = sym('x_1');
 x_2 = sym('x_2');
 
 % Functions
-Xj=sigmoidal_s(0,[x_1,x_2],param);
+Xj = sigmoidal_s(0,[x_1,x_2],param);
 
 % Jacobian of the function wrt x_1 and x_2
-J=jacobian([Xj(1);Xj(2)],[x_1,x_2]);
+J = jacobian([Xj(1);Xj(2)],[x_1,x_2]);
 
 % Pre-location
 ev = zeros(2,2);
@@ -17,50 +17,54 @@ D = zeros(2,1);
 T = zeros(2,1);
 SRT = zeros(2,1);
 
-s = [0 1.5; 1.5 0];
+s = [0 1.5; 1.5 0]; % Desired states (each row is a state)
 
 for j = 1:2
        
     % Evaluate the jacobian in the "desired states"
-    J_e=subs(J,{x_1,x_2},{s(j,1),s(j,2)}); % Here we modify the states  
-    J_e=double(J_e);
+    J_e = subs(J,{x_1,x_2},{s(j,1),s(j,2)}); % Here we modify the states  
+    J_e = double(J_e);
+    
     % Eigen values 
-    ev(:,j)=eig(J_e);
+    ev(:,j) = eig(J_e);
+    
     % Determinant 
-    D(j)=ev(1,j).*ev(2,j);
+    D(j) = ev(1,j).*ev(2,j);
+    
     % Trace
-    T(j)=ev(1,j)+ev(2,j);
+    T(j) = ev(1,j)+ev(2,j);
+    
     % Term inside the square root
-    SRT(j)=T(j)^2-4*D(j);
+    SRT(j) = T(j)^2-4*D(j);
         
 end
 
-assignin('base','ev',ev)
+assignin('base','ev',ev) % Save the eigenvalues in the workspace
 
 % The determinant of the jacobian evaluated at the desired state must be
 % positive 
 
-if D>0
-    F1=0;
+if D > 0
+    F1 = 0;
 else
-    F1=1;
+    F1 = 1;
 end
 
 % The trace of the jacobian evaluated at the desired state must be negative
 
-if T<0
-    F2=0;
+if T < 0
+    F2 = 0;
 else
-    F2=1;
+    F2 = 1;
 end
 
 % The eigenvalues must be real then the term inside the square root must be
 % positive
 
-if SRT>0
-    F3=0;
+if SRT > 0
+    F3 = 0;
 else
-    F3=1;
+    F3 = 1;
 end
 
 end

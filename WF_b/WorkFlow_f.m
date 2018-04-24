@@ -11,22 +11,25 @@ clc; clear; close all;
 tic
 %% Main
 
-% The following variables are used in the main script and in the "model data base" (solutions)
+% The following variables are used in the main script and target function (solutions_b.m)
 
 global t0 
+global x0 
 global xpre
 
-t0=[0:0.1:10];
+% Initial conditions of the ODE's
+t0 = [0:0.1:10];
+x0 = [0.5 2.5];
 
 %% Optimization set-up particle swarm
 
-fun=@solutions_f; % "model data base" 
+fun = @solutions_f; % "model data base" 
 
 % Parameter search space
-ub=[0.9,1,1,0.9,1,1,1,1,1,1,1,1];
-lb=[0,-1,0,0,-1,0,-1,-1,-1,-1,-1,-1];
+ub = [0.9,1,1,0.9,1,1,1,1,1,1,1,1];
+lb = [0,0,0.1,0,0,0.1,0.1,0.1,-1,-1,-1,-1];
 
-options=optimoptions('particleswarm','SwarmSize',100,'HybridFcn',@fmincon,'Display','iter');
+options = optimoptions('particleswarm','SwarmSize',100,'HybridFcn',@fmincon,'Display','iter');
 
 rng default  % For reproducibility
 nvars = 12; % Number of parameters to estimate 
@@ -45,26 +48,25 @@ Xss_s = sigmoidal_s(0,[x1;x2],param); % Steady state of the solution system
 eq_1 = Xss_s(1) == 0;
 eq_2 = Xss_s(2) == 0;    
 
-[x1e,x2e]=solve(eq_1,eq_2,x1,x2);
+[x1e,x2e] = solve(eq_1,eq_2,x1,x2);
 
-x1e=double(x1e);
-x2e=double(x2e);
+x1e = double(x1e);
+x2e = double(x2e);
 
 %% Computing the vector field for the "decoded system"
 
 % Initial conditions equally distributed 
-x1=linspace(0,3,20);
-x2=linspace(0,3,20);
+x1 = linspace(0,3,20);
+x2 = linspace(0,3,20);
 
-[x1_s,x2_s]=meshgrid(x1,x2);
+[x1_s,x2_s] = meshgrid(x1,x2);
 
 % Pre-location
-u_s=zeros(size(x1_s));
-v_s=zeros(size(x2_s));
+u_s = zeros(size(x1_s));
+v_s = zeros(size(x2_s));
 
-t=0;
 for i = 1:numel(x1_s)
-    Xprime_s = sigmoidal_s(t,[x1_s(i);x2_s(i)],param);
+    Xprime_s = sigmoidal_s(0,[x1_s(i);x2_s(i)],param); % Solve at time zero
     u_s(i) = Xprime_s(1);
     v_s(i) = Xprime_s(2);    
 end
