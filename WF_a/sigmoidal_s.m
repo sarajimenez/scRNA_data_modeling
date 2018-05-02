@@ -6,7 +6,7 @@ function dx = sigmoidal_s(t,x,param) % 12 parameters
     % Sigmoid x1: a1=param(1), b1=param(2), c1=param(3).
     s1 = param(1)+(1-param(1))./(1+exp((-4*param(2)/param(3))*(x1-param(3))/(1-param(1))));
     % Sigmoid x2: a2=param(4), b2=param(5), c2=param(6).
-    s2 = param(4)+(1-param(4))./(1+exp((-4*param(5)/param(6))*(x2-param(6))/(1-param(4))));
+    s2 = param(4)+(1-param(4))./(1+exp((4*param(5)/param(6))*(x2-param(6))/(1-param(4))));
     
     % Input
     xI = 0;

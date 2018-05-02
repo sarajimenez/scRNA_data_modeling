@@ -18,15 +18,15 @@ global x0
 global xpre
 
 % Initial conditions of the ODE's
-t0 = [0:0.1:10];
-x0 = [0.5 2.5];
+t0 = [0:0.1:5];
+x0 = [1.5  1.5];
 
 %% Optimization set-up particle swarm
 
-fun = @solutions_f; % "model data base" 
+fun = @solutions_b; % "model data base" 
 
 % Parameter search space
-ub = [0.9,1,1,0.9,1,1,1,1,1,1,1,1];
+ub = [0.9,2,2,0.9,2,2,1,1,1,1,1,1];
 lb = [0,0,0.1,0,0,0.1,0.1,0.1,-1,-1,-1,-1];
 
 options = optimoptions('particleswarm','SwarmSize',100,'HybridFcn',@fmincon,'Display','iter');
@@ -56,8 +56,8 @@ x2e = double(x2e);
 %% Computing the vector field for the "decoded system"
 
 % Initial conditions equally distributed 
-x1 = linspace(0,3,20);
-x2 = linspace(0,3,20);
+x1 = linspace(-1,2,20);
+x2 = linspace(-1,2,20);
 
 [x1_s,x2_s] = meshgrid(x1,x2);
 
@@ -80,17 +80,17 @@ plot(x2e,x1e,'.k','MarkerSize',20) % Fixed point
 %% Plotting solutions on the vector field of the "decoded system"
 
 hold on
-for x10 = [0 3.0]
-    for x20 = [0 0.3 0.5 1.0 1.5 2.0 2.5 3.0]
-        [t, S] = ode45(@sigmoidal_s,[0,100],[x10,x20],[],param); 
+for x10 = [-1 2.0]
+    for x20 = [-1 0 0.3 0.5 1.0 1.5 2.0]
+        [t, S] = ode45(@sigmoidal_s,[0,5],[x10,x20],[],param); 
         plot(S(:,2),S(:,1),'b')
     end
 end
 
 hold on
-for x20 = [0 3.0]
-    for x10 = [0 0.3 0.5 1.0 1.5 2.0 2.5 3.0]
-        [t, S] = ode45(@sigmoidal_s,[0,100],[x10,x20],[],param); 
+for x20 = [-1 2.0]
+    for x10 = [-1 0 0.3 0.5 1.0 1.5 2.0]
+        [t, S] = ode45(@sigmoidal_s,[0,5],[x10,x20],[],param); 
         plot(S(:,2),S(:,1),'b')
     end
 end

@@ -4,25 +4,22 @@ Model of solutions: Sigmoidal
 Following: Daniels, B. C., & Nemenman, I. (2015). Nature Communications, 6, 1?8. https://doi.org/10.1038/ncomms9133 
 %}
 
-function cf = solutions_g(param)
+function cf = solutions_b(param)
 
-global xobs
 global t0 
+global x0 
 global xpre
-global x0
 
-[t, x] = ode45(@sigmoidal,t0,x0); % The function change according to the model that we want to test
+% The initial conditions can be changed 
+[t, x]=ode45(@sigmoidal,t0,x0); % The function change according to the model that we want to test
 
 xpre = x;
 
-% Residuals ||xobs-xpre||
-r = sqrt(sum((xpre(:,1)-xobs(:,1)).^2))+sqrt(sum((xpre(:,2)-xobs(:,2)).^2));
-
 % Non-linear constraint related with the stability of the fixed points 
-[F1, F2, F3] = nlc_g(param);
+[F1, F2, F3] = nlc_b(param);
 
 % Cost function
-cf = 0.2*r + 100*F1 + 100*F2 + 100*F3;
+cf = 100*F1(1,1) + 100*F1(2,1) + 100*F2(1,1) + 100*F2(2,1) + 100*F3(1,1) + 100*F3(2,1);
 
 function dx = sigmoidal(t,x) % 12 parameters 
 

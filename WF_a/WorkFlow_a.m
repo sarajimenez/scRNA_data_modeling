@@ -67,8 +67,8 @@ end
 % Initial conditions
 
 t0 = [0:0.1:10];
-xa0 = 0.5; 
-xb0 = 2.5;
+xa0 = 0; 
+xb0 = 0;
 
 [t x] = ode45(@myfun,t0,[xa0 xb0]);
 
@@ -86,7 +86,7 @@ x0 = [xobs(1,1) xobs(1,2)];
 
 %% Optimization set-up particle swarm
 
-fun = @solutions_g; % "model data base" 
+fun = @solutions_a; % "model data base" 
 
 % Parameter search space
 ub = [0.9,1,1,0.9,1,1,1,1,1,1,1,1];
