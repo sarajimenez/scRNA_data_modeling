@@ -24,3 +24,4 @@ Versions:
 
 - WF_a: includes the model for generating data
 - WF_b: without generated data
+- WF_c: without generated data, nullclines in the constraint

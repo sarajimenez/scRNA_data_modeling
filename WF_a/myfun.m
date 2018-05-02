@@ -14,11 +14,11 @@ kb = 1;
 S = 0.5;
 n = 4;
 
-pa = 1.2; % High autoactivation of xa
-pb = 1.2; % High expression of xb
+% pa = 1.2; % High autoactivation of xa
+% pb = 1.2; % High expression of xb
 
-% pa = 0.6; % Low autoactivation of xa
-% pb = 0.6; % Low autoactivation of xb
+pa = 0.6; % Low autoactivation of xa
+pb = 0.6; % Low autoactivation of xb
 
 xa = x(1);
 xb = x(2);

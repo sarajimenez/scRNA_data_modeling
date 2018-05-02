@@ -55,8 +55,16 @@ quiver(xb1,xa1,v,u,'r'),xlabel('xb'),ylabel('xa'),title('Vector field of the tru
 %% Plotting solutions on the vector field of the "true system" (generated data)
 
 hold on
-for xa0 = [0 0.5 3.0]
-    for xb0 = [0 0.5 3.0]
+for xa0 = [0 3.0]
+    for xb0 = [0 0.05 0.075 0.1 0.3 0.5 0.75 1.0 1.5 2.0 3.0]
+        [t, S] = ode45(@myfun,[0,10],[xa0,xb0]); 
+        plot(S(:,2),S(:,1),'b')
+    end
+end
+
+hold on
+for xb0 = [0 3.0]
+    for xa0 = [0 0.05 0.075 0.1 0.3 0.5 0.75 1.0 1.5 2.0 3.0]
         [t, S] = ode45(@myfun,[0,10],[xa0,xb0]); 
         plot(S(:,2),S(:,1),'b')
     end
