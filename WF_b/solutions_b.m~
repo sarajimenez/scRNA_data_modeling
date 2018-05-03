@@ -4,30 +4,22 @@ Model of solutions: Sigmoidal
 Following: Daniels, B. C., & Nemenman, I. (2015). Nature Communications, 6, 1?8. https://doi.org/10.1038/ncomms9133 
 %}
 
-function cf = solutions_c(param)
+function cf = solutions_b(param)
 
 % global t0 
 % global x0 
 % global xpre
-
-% The initial conditions can be changed 
+% 
+% % The initial conditions can be changed 
 % [t, x]=ode45(@sigmoidal,t0,x0); % The function change according to the model that we want to test
 % 
 % xpre = x;
 
-% Constraint related with the nullclines
-x0_nl_1 = [0; 1.5];
-x1_nl = zerolines_1(x0_nl_1,param);
-x0_nl_2 = [0; 1.5];
-x2_nl = zerolines_2(x0_nl_2,param);
-
-G = x1_nl - x2_nl;
-
 % Non-linear constraint related with the stability of the fixed points 
-[F1, F2, F3] = nlc_c(param);
+[F1, F2, F3] = nlc_b(param);
 
 % Cost function
-cf = 100*F1(1,1) + 100*F1(2,1) + 100*F2(1,1) + 100*F2(2,1) + 100*F3(1,1) + 100*F3(2,1) + 100*G(1,1) + 100*G(2,1);
+cf = 100*F1(1,1) + 100*F1(2,1) + + 100*F1(2,1) + 100*F2(1,1) + 100*F2(2,1) + 100*F3(1,1) + 100*F3(2,1);
 
 % function dx = sigmoidal(t,x) % 12 parameters 
 % 

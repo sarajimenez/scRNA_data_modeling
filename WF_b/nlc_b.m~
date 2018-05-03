@@ -12,17 +12,17 @@ Xj = sigmoidal_s(0,[x_1,x_2],param);
 J = jacobian([Xj(1);Xj(2)],[x_1,x_2]);
 
 % Pre-location
-ev = zeros(2,3);
-D = zeros(3,1);
-T = zeros(3,1);
-SRT = zeros(3,1);
-F1 = zeros(3,1);
-F2 = zeros(3,1);
-F3 = zeros(3,1);
+ev = zeros(2,2);
+D = zeros(2,1);
+T = zeros(2,1);
+SRT = zeros(2,1);
+F1 = zeros(2,1);
+F2 = zeros(2,1);
+F3 = zeros(2,1);
 
-s = [0 1; 0.5 0.5; 1 0]; % Desired states (each row is a state)
+s = [0 1.5; 1.5 0]; % Desired states (each row is a state)
 
-for j = 1:3
+for j = 1:2
        
     % Evaluate the jacobian in the "desired states"
     J_e = subs(J,{x_1,x_2},{s(j,1),s(j,2)}); % Here we modify the states  
@@ -42,9 +42,9 @@ for j = 1:3
     F2(j,1) = exp(T(j,1));
     
     % Term inside the square root
-    SRT(j,1) = T(j,1)^2-4.*D(j,1);
+    SRT(j,1) = T(j,1)^2-4.*D(j);
     
-    F3(j,1) = exp(-SRT(j,1));
+    F3(j) = exp(-SRT(j));
         
 end
 
