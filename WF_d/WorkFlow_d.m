@@ -6,12 +6,12 @@ Developer: Sara Jimenez Correa (Living Systems Laboratory)
 Advisor: Jesper Tegner 
 %}
 
-clc; clear; close all; 
+clc; clear; close all;
 
 tic
 %% Main
 
-% The following variables are used in the main script and target function (solutions_c.m)
+% The following variables are used in the main script and target function (solutions_d.m)
 
 % global t0 
 % global x0 
@@ -23,17 +23,18 @@ tic
 
 %% Optimization set-up particle swarm
 
-fun = @solutions_c; % "model data base" 
+fun = @solutions_d; % "model data base" 
 
 % Parameter search space
-ub = [0.9,2,2,0.9,2,2,1,1,1,1,1,1];
-lb = [0,0,0.1,0,0,0.1,0.1,0.1,-1,-1,-1,-1];
+ub = [1,4,1,1,4,1,0.5,0.5,-5,5,5,-5];
+lb = [1,4,1,1,4,1,0.5,0.5,-5,5,5,-5];
 
 options = optimoptions('particleswarm','SwarmSize',100,'HybridFcn',@fmincon,'Display','iter');
+% options = optimoptions('particleswarm','SwarmSize',100,'Display','iter');
 
 rng default  % For reproducibility
 nvars = 12; % Number of parameters to estimate 
-[param, exitflag] = particleswarm(fun,nvars,lb,ub,options);
+[param, exitflag] = particleswarm(fun,nvars,lb,ub,options)
         
 % figure(2)
 % subplot(1,2,1), plot(t0,xpre(:,1),'k'),title('x_A'),legend('Predicted'),xlabel('time'),ylabel('Expression'); hold on;

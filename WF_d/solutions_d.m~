@@ -4,7 +4,7 @@ Model of solutions: Sigmoidal
 Following: Daniels, B. C., & Nemenman, I. (2015). Nature Communications, 6, 1?8. https://doi.org/10.1038/ncomms9133 
 %}
 
-function cf = solutions_c(param)
+function cf = solutions_d(param)
 
 % global t0 
 % global x0 
@@ -16,12 +16,21 @@ function cf = solutions_c(param)
 % xpre = x;
 
 % Non-linear constraint related with the stability of the fixed points 
-[F1, F2, F3, G] = nlc_c(param);
+[F1, F2, F3, G] = nlc_d(param);
 
+% Constraint related with the relation of the parameters
+
+H1 = exp(param(9)*param(10));
+H2 = exp(param(11)*param(12));
+H4 = exp(-param(10)*param(11));
+H5 = exp(-param(9)*param(12));
+H6 = exp(-(param(2)/(3*param(3))-1));
+H7 = exp(-(param(5)/(3*param(6))-1));
+    
 % Cost function
-cf = 100*F1(1,1) + 100*F1(2,1) + 100*F2(1,1) + 100*F2(2,1) + 100*F3(1,1) + 100*F3(2,1) + 100*G(1,1) + 100*G(2,1);
+cf = 1*F1(1,1) + 1*F1(2,1) + 1*F2(1,1) + 1*F2(2,1) + 1*F3(1,1) + 1*F3(2,1) + 1*G(1,1) + 1*G(2,1) + 1*H1 + 1*H2 + 1*H4 + 1*H5 + 1*H6 + 1*H7;
 
-function [F1, F2, F3, G] = nlc_c(param)
+function [F1, F2, F3, G] = nlc_d(param)
 
 x_1 = sym('x_1');
 x_2 = sym('x_2');
@@ -31,9 +40,9 @@ x_2 = sym('x_2');
 % sigmoids 
 
 % Sigmoid x1: a1=param(1), b1=param(2), c1=param(3).
-s1 = param(1)+(1-param(1))./(1+exp((-4*param(2)/param(3))*(x_1-param(3))/(1-param(1))));
+s1 = param(1) + 1/(1+exp(-param(3)*(x_1-param(2)/param(3))));
 % Sigmoid x2: a2=param(4), b2=param(5), c2=param(6).
-s2 = param(4)+(1-param(4))./(1+exp((-4*param(5)/param(6))*(x_2-param(6))/(1-param(4))));
+s2 = param(4) + 1/(1+exp(-param(6)*(x_2-param(5)/param(6))));
 
 % Input
 xI = 0;
@@ -110,6 +119,7 @@ end
 assignin('base','ev',ev) % Save the eigenvalues in the workspace
 assignin('base','eq1_e',eq1_e) % Save in the workspace
 assignin('base','eq2_e',eq2_e) % Save in the workspace
+
 
 end
 
