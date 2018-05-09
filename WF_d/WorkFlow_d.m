@@ -11,17 +11,7 @@ clc; clear; close all;
 tic
 %% Main
 
-% The following variables are used in the main script and target function (solutions_d.m)
-
-% global t0 
-% global x0 
-% global xpre
-% 
-% Initial conditions of the ODE's
-% t0 = [0:0.1:5];
-% x0 = [1  1];
-
-%% Optimization set-up particle swarm
+% Optimization set-up particle swarm
 
 fun = @solutions_d; % "model data base" 
 
@@ -30,17 +20,11 @@ ub = [0.7,9,8,0.7,9,8,1.5,1.5,1.5,1.5,1.5,1.5];
 lb = [0.3,5,4,0.3,5,4,0.9,0.9,-1.5,-1.5,-1.5,-1.5];
 
 options = optimoptions('particleswarm','SwarmSize',100,'HybridFcn',@fmincon,'Display','iter');
-% options = optimoptions('particleswarm','SwarmSize',100,'Display','iter');
 
 rng default  % For reproducibility
 nvars = 12; % Number of parameters to estimate 
 [param, exitflag] = particleswarm(fun,nvars,lb,ub,options);
         
-% figure(2)
-% subplot(1,2,1), plot(t0,xpre(:,1),'k'),title('x_A'),legend('Predicted'),xlabel('time'),ylabel('Expression'); hold on;
-% subplot(1,2,2), plot(t0,xpre(:,2),'k'),title('x_B');legend('Predicted'),xlabel('time'),ylabel('Expression'); hold on;
-
-
 %% Fixed points of the solution system --> x1'=0 and x2'=0 simultaneously 
 
 syms x1 x2
@@ -83,7 +67,7 @@ plot(x2e,x1e,'.k','MarkerSize',20) % Fixed point
 hold on
 for x10 = [0 2.0]
     for x20 = [0 0.3 0.5 1.0 1.5 2.0]
-        [t, S] = ode45(@sigmoidal_s,[0,5],[x10,x20],[],param); 
+        [t, S] = ode45(@sigmoidal_s,[0,15],[x10,x20],[],param); 
         plot(S(:,2),S(:,1),'b')
     end
 end
@@ -91,7 +75,7 @@ end
 hold on
 for x20 = [0 2.0]
     for x10 = [0 0.3 0.5 1.0 1.5 2.0]
-        [t, S] = ode45(@sigmoidal_s,[0,5],[x10,x20],[],param); 
+        [t, S] = ode45(@sigmoidal_s,[0,15],[x10,x20],[],param); 
         plot(S(:,2),S(:,1),'b')
     end
 end

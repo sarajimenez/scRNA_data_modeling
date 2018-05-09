@@ -11,36 +11,21 @@ clc; clear; close all;
 tic
 %% Main
 
-% The following variables are used in the main script and target function (solutions_d.m)
+% Optimization set-up particle swarm
 
-% global t0 
-% global x0 
-% global xpre
-% 
-% Initial conditions of the ODE's
-% t0 = [0:0.1:5];
-% x0 = [1  1];
-
-%% Optimization set-up particle swarm
-
-fun = @solutions_d; % "model data base" 
+fun = @solutions_SH; % "model data base" 
 
 % Parameter search space
-ub = [0.7,9,8,0.7,9,8,1.2,1.2,-1.5,1.5,1.5,-1.5];
-lb = [0.3,5,4,0.3,5,4,1.2,1.2,-1.5,1.5,1.5,-1.5];
+ub = [2,2,2,2,1,8,1.2,1.2];
+lb = [0,0,0,0,0,0,0,0];
 
 options = optimoptions('particleswarm','SwarmSize',100,'HybridFcn',@fmincon,'Display','iter');
 % options = optimoptions('particleswarm','SwarmSize',100,'Display','iter');
 
 rng default  % For reproducibility
-nvars = 12; % Number of parameters to estimate 
+nvars = 8; % Number of parameters to estimate 
 [param, exitflag] = particleswarm(fun,nvars,lb,ub,options);
-        
-% figure(2)
-% subplot(1,2,1), plot(t0,xpre(:,1),'k'),title('x_A'),legend('Predicted'),xlabel('time'),ylabel('Expression'); hold on;
-% subplot(1,2,2), plot(t0,xpre(:,2),'k'),title('x_B');legend('Predicted'),xlabel('time'),ylabel('Expression'); hold on;
-
-
+  
 %% Fixed points of the solution system --> x1'=0 and x2'=0 simultaneously 
 
 syms x1 x2
