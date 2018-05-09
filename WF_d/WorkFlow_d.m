@@ -16,7 +16,7 @@ tic
 % global t0 
 % global x0 
 % global xpre
-
+% 
 % Initial conditions of the ODE's
 % t0 = [0:0.1:5];
 % x0 = [1  1];
@@ -26,15 +26,15 @@ tic
 fun = @solutions_d; % "model data base" 
 
 % Parameter search space
-ub = [1,4,1,1,4,1,0.5,0.5,-5,5,5,-5];
-lb = [1,4,1,1,4,1,0.5,0.5,-5,5,5,-5];
+ub = [0.7,9,8,0.7,9,8,1.5,1.5,1.5,1.5,1.5,1.5];
+lb = [0.3,5,4,0.3,5,4,0.9,0.9,-1.5,-1.5,-1.5,-1.5];
 
 options = optimoptions('particleswarm','SwarmSize',100,'HybridFcn',@fmincon,'Display','iter');
 % options = optimoptions('particleswarm','SwarmSize',100,'Display','iter');
 
 rng default  % For reproducibility
 nvars = 12; % Number of parameters to estimate 
-[param, exitflag] = particleswarm(fun,nvars,lb,ub,options)
+[param, exitflag] = particleswarm(fun,nvars,lb,ub,options);
         
 % figure(2)
 % subplot(1,2,1), plot(t0,xpre(:,1),'k'),title('x_A'),legend('Predicted'),xlabel('time'),ylabel('Expression'); hold on;

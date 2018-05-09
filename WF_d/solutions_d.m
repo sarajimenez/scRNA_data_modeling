@@ -9,9 +9,9 @@ function cf = solutions_d(param)
 % global t0 
 % global x0 
 % global xpre
-
+% 
 % The initial conditions can be changed 
-% [t, x]=ode45(@sigmoidal,t0,x0); % The function change according to the model that we want to test
+% [t, x]=ode45(@sigmoidal_s,t0,x0,param); % The function change according to the model that we want to test
 % 
 % xpre = x;
 
@@ -24,8 +24,8 @@ H1 = exp(param(9)*param(10));
 H2 = exp(param(11)*param(12));
 H4 = exp(-param(10)*param(11));
 H5 = exp(-param(9)*param(12));
-H6 = exp(-(param(2)/(3*param(3))-1));
-H7 = exp(-(param(5)/(3*param(6))-1));
+H6 = exp(-(param(2)/(2*param(3))-1));
+H7 = exp(-(param(5)/(2*param(6))-1));
     
 % Cost function
 cf = 1*F1(1,1) + 1*F1(2,1) + 1*F2(1,1) + 1*F2(2,1) + 1*F3(1,1) + 1*F3(2,1) + 1*G(1,1) + 1*G(2,1) + 1*H1 + 1*H2 + 1*H4 + 1*H5 + 1*H6 + 1*H7;
@@ -81,7 +81,7 @@ eq1 = param(7).*(param(9).*s1+param(10).*s2) - x_1;
 % W21=param(11), W22=param(12)    
 eq2 = param(8).*(param(11).*s1+param(12).*s2) - x_2;
 
-s = [0.0 0.0; 1.0 1.0]; % Desired states (each row is a state)
+s = [0.0 1.0; 1.0 0.0]; % Desired states (each row is a state)
 
 for j = 1:2
        
