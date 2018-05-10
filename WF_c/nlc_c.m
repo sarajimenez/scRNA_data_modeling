@@ -49,7 +49,7 @@ G = zeros(2,1);
 eq1_e = zeros(2,1);
 eq2_e = zeros(2,1);
 
-s = [0.0 0.0; 1.0 1.0]; % Desired states (each row is a state)
+s = [0.5 2.0; 2.0 0.5]; % Desired states (each row is a state)
 
 for j = 1:2
        

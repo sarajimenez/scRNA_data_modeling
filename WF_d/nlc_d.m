@@ -49,7 +49,7 @@ eq1 = param(7).*(param(9).*s1+param(10).*s2) - x_1;
 % W21=param(11), W22=param(12)    
 eq2 = param(8).*(param(11).*s1+param(12).*s2) - x_2;
 
-s = [0.0 1.0; 1.0 0.0]; % Desired states (each row is a state)
+s = [0.5 1.5; 1.5 0.5]; % Desired states (each row is a state)
 
 for j = 1:2
        
