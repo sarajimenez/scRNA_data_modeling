@@ -1,4 +1,4 @@
-function [F1, F2, F3, G, P] = nlc_d(param)
+function [F1, F2, F3, G] = nlc_e(param)
 
 x_1 = sym('x_1');
 x_2 = sym('x_2');
@@ -15,18 +15,14 @@ s2 = param(4) + 1/(1+exp(-param(6)*(x_2-param(5)/param(6))));
 % Input
 xI = 0;
     
-% W11=param(9), W12=param(10)
-f = -x_1./param(7)+param(9).*s1+param(10).*s2+xI;
+% W11=param(7), W12=param(8)
+f = -x_1./1.0+param(7).*s1+param(8).*s2+xI;
     
-% W21=param(11), W22=param(12)    
-g = -x_2./param(8)+param(11).*s1+param(12).*s2+xI;
-
-Xj = [f; g];
-
-assignin('base','Xj',Xj) % Save the jacobian in the workspace
+% W21=param(9), W22=param(10)    
+g = -x_2./1.0+param(9).*s1+param(10).*s2+xI;
 
 % Jacobian of the function wrt x_1 and x_2
-J = jacobian([Xj(1);Xj(2)],[x_1,x_2]);
+J = jacobian([f;g],[x_1,x_2]);
 
 assignin('base','J',J) % Save the jacobian in the workspace
 
@@ -38,18 +34,11 @@ SRT = zeros(2,1);
 F1 = zeros(2,1);
 F2 = zeros(2,1);
 F3 = zeros(2,1);
-G = zeros(2,1);
-eq1_e = zeros(2,1);
-eq2_e = zeros(2,1);
+% G = zeros(2,2);
+% Xe = zeros(2,2);
 
-% Nullclines
- 
-% W11=param(9), W12=param(10)
-eq1 = param(7).*(param(9).*s1+param(10).*s2) - x_1;
-% W21=param(11), W22=param(12)    
-eq2 = param(8).*(param(11).*s1+param(12).*s2) - x_2;
-
-s = [0.5 1.5; 1.5 0.0]; % Desired states (each row is a state)
+s = [0 1; 1 0]; % Desired states (each row is a state)
+assignin('base','s',s) % Save in the workspace
 
 for j = 1:2
        
@@ -75,19 +64,22 @@ for j = 1:2
     
     F3(j) = exp(-SRT(j));
     
+    % Nullclines
+ 
+    eq1 = f == 0; 
+    eq2 = g == 0;
+    
     % Intersections of the nullclines
-    eq1_e(j) = subs(eq1,{x_1,x_2},{s(j,1),s(j,2)}); eq1_e(j) = double(eq1_e(j));
+    [x1e, x2e] = solve(eq1,eq2,x_1,x_2);
     
-    eq2_e(j) = subs(eq2,{x_1,x_2},{s(j,1),s(j,2)}); eq2_e(j) = double(eq2_e(j));
+    Xe(j,1) = double(x1e);
+    Xe(j,2) = double(x2e);
     
-    G(j) = abs(eq1_e(j) - eq2_e(j));
+    G(j,:) = abs(Xe(j,:) - s(j,:));
         
 end
 
-P = [exp(-eq1_e); exp(-eq2_e)];
-
 assignin('base','ev',ev) % Save the eigenvalues in the workspace
-assignin('base','eq1_e',eq1_e) % Save in the workspace
-assignin('base','eq2_e',eq2_e) % Save in the workspace
+assignin('base','Xe',Xe) % Save in the workspace
 
 end

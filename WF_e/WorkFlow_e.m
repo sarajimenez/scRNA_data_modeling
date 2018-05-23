@@ -13,11 +13,11 @@ tic
 
 % Optimization set-up particle swarm
 
-fun = @solutions_d; % "model data base" 
+fun = @solutions_e; % "model data base" 
 
 % Parameter search space
-ub = [1.0,7,10,1.0,7,10,5,5,5,5];
-lb = [0.1,-7,-10,0.1,-7,-10,-5,-5,-5,-5];
+ub = [0.1,7,10,0.1,7,10,5,5,5,5];
+lb = [0.1,7,-10,0.1,7,-10,-5,-5,-5,-5];
 
 options = optimoptions('particleswarm','SwarmSize',100,'HybridFcn',@fmincon,'Display','iter');
 
@@ -26,6 +26,9 @@ nvars = 10; % Number of parameters to estimate
 [param, exitflag] = particleswarm(fun,nvars,lb,ub,options);
         
 %% Fixed points of the solution system --> x1'=0 and x2'=0 simultaneously 
+
+x1_e = Xe(:,1);
+x2_e = Xe(:,2);
 
 syms x1 x2
 
@@ -60,7 +63,7 @@ figure(1)
 quiver(x2_s,x1_s,v_s,u_s,'r'),xlabel('x2'),ylabel('x1'),title('Vector field of the decoded system'),axis tight equal;
 
 hold on
-plot(x2e,x1e,'.k','MarkerSize',20) % Fixed point 
+plot(x2_e,x1_e,'.k','MarkerSize',20) % Fixed point 
 
 %% Plotting solutions on the vector field of the "decoded system"
 

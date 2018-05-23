@@ -16,15 +16,16 @@ tic
 fun = @solutions_SH; % "model data base" 
 
 % Parameter search space
-ub = [2,2,2,2,1,8,1.2,1.2];
-lb = [0,0,0,0,0,0,0,0];
+ub = [2,2,2,2,1,6];
+lb = [0,0,0,0,0,2];
 
 options = optimoptions('particleswarm','SwarmSize',100,'HybridFcn',@fmincon,'Display','iter');
 % options = optimoptions('particleswarm','SwarmSize',100,'Display','iter');
 
 rng default  % For reproducibility
-nvars = 8; % Number of parameters to estimate 
-[param, exitflag] = particleswarm(fun,nvars,lb,ub,options);
+nvars = 6; % Number of parameters to estimate 
+[param, exitflag, fval, output] = particleswarm(fun,nvars,lb,ub,options);
+
   
 %% Fixed points of the solution system --> x1'=0 and x2'=0 simultaneously 
 
@@ -42,8 +43,8 @@ x2e = double(x2e);
 %% Computing the vector field for the "decoded system"
 
 % Initial conditions equally distributed 
-x1 = linspace(0,2,20);
-x2 = linspace(0,2,20);
+x1 = linspace(0,3,20);
+x2 = linspace(0,3,20);
 
 [x1_s,x2_s] = meshgrid(x1,x2);
 
@@ -57,7 +58,7 @@ for i = 1:numel(x1_s)
     v_s(i) = Xprime_s(2);    
 end
 
-figure(4)
+figure(1)
 quiver(x2_s,x1_s,v_s,u_s,'r'),xlabel('x2'),ylabel('x1'),title('Vector field of the decoded system'),axis tight equal;
 
 hold on
@@ -66,17 +67,17 @@ plot(x2e,x1e,'.k','MarkerSize',20) % Fixed point
 %% Plotting solutions on the vector field of the "decoded system"
 
 hold on
-for x10 = [0 2.0]
-    for x20 = [0 0.3 0.5 1.0 1.5 2.0]
-        [t, S] = ode45(@sigmoidal_s,[0,5],[x10,x20],[],param); 
+for x10 = [0 3.0]
+    for x20 = [0 0.05 0.075 0.1 0.3 0.5 0.75 1.0 1.5 2.0 3.0]
+        [t, S] = ode45(@sigmoidal_s,[0,15],[x10,x20],[],param); 
         plot(S(:,2),S(:,1),'b')
     end
 end
 
 hold on
-for x20 = [0 2.0]
-    for x10 = [0 0.3 0.5 1.0 1.5 2.0]
-        [t, S] = ode45(@sigmoidal_s,[0,5],[x10,x20],[],param); 
+for x20 = [0 3.0]
+    for x10 = [0 0.05 0.075 0.1 0.3 0.5 0.75 1.0 1.5 2.0 3.0]
+        [t, S] = ode45(@sigmoidal_s,[0,15],[x10,x20],[],param); 
         plot(S(:,2),S(:,1),'b')
     end
 end

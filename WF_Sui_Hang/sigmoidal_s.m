@@ -1,13 +1,13 @@
 function dx = sigmoidal_s(t,x,param) % 12 parameters 
 
-qa = param(1);
-qb = param(2);
-ka = param(3);
-kb = param(4);
+qa = param(3);
+qb = param(4);
+ka = 1;
+kb = 1;
 S = param(5);
 n = param(6);
-pa = param(7);
-pb = param(8);
+pa = param(1);
+pb = param(2);
 
 xa = x(1);
 xb = x(2);
