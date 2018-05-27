@@ -64,6 +64,8 @@ for j = 1:2
     
     F3(j) = exp(-SRT(j));
     
+end
+
     % Nullclines
  
     eq1 = f == 0; 
@@ -72,12 +74,11 @@ for j = 1:2
     % Intersections of the nullclines
     [x1e, x2e] = solve(eq1,eq2,x_1,x_2);
     
-    Xe(j,1) = double(x1e);
-    Xe(j,2) = double(x2e);
+    Xe(:,1) = double(x1e);
+    Xe(:,2) = double(x2e);
     
-    G(j,:) = abs(Xe(j,:) - s(j,:));
+    G = abs(Xe - s);
         
-end
 
 assignin('base','ev',ev) % Save the eigenvalues in the workspace
 assignin('base','Xe',Xe) % Save in the workspace

@@ -16,8 +16,8 @@ tic
 fun = @solutions_e; % "model data base" 
 
 % Parameter search space
-ub = [0.1,7,10,0.1,7,10,5,5,5,5];
-lb = [0.1,7,-10,0.1,7,-10,-5,-5,-5,-5];
+ub = [0.5,10,10,0.5,10,10,5,5,5,5];
+lb = [0.1,1,1,0.1,1,1,-5,-5,-5,-5];
 
 options = optimoptions('particleswarm','SwarmSize',100,'HybridFcn',@fmincon,'Display','iter');
 
